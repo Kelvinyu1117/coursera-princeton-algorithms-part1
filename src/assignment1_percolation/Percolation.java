@@ -20,22 +20,22 @@ public class Percolation {
         grid = new Point[n + 2][n + 2];
         tGrid = new boolean[n + 2][n + 2];
 
-        grid[0][0].setCoordinate(0, 0);
+        grid[0][0] = new Point(0, 0);
 
-        grid[n + 1][0].setCoordinate(0, 0);
+        grid[n + 1][0] = new Point(n + 1, 0);
 
         // initialize the grids
         for (int i = 1; i <= n; i++) {
             for (int j = 1; j <= n; j++) {
-                grid[i][j].setCoordinate(i, j);
+                grid[i][j] = new Point(i, j);
             }
         }
 
         // connect the first row and last row to the virtual sites
-        for (int i = 1; i <= n; i++) {
-            union(grid[1][i], grid[0][0]);
-            union(grid[n][i], grid[n + 1][1]);
-        }
+//        for (int i = 1; i <= n; i++) {
+//            union(grid[1][i], grid[0][0]);
+//            union(grid[n][i], grid[n + 1][1]);
+//        }
     }
 
     private class Point {
@@ -67,6 +67,11 @@ public class Percolation {
         public void setCol(int col) {
             this.col = col;
         }
+
+        public Point getParent() {
+            return this.parent;
+        }
+
 
         public void setRow(int row) {
             this.row = row;
@@ -147,6 +152,8 @@ public class Percolation {
     }
 
     public static void main(String[] args) {
+        Percolation p = new Percolation(10);
 
+        System.out.println(p.toString());
     }
 }
