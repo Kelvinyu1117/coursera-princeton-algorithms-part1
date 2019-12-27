@@ -1,7 +1,5 @@
 package assignment1_percolation;
 
-import java.util.Arrays;
-
 public class Percolation {
 
     private Point[][] grid;
@@ -83,10 +81,6 @@ public class Percolation {
 
         public int getCol() {
             return col;
-        }
-
-        public boolean isRoot() {
-            return row == parent.row && col == parent.col;
         }
 
         @Override
