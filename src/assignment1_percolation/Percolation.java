@@ -41,16 +41,10 @@ public class Percolation {
         private int col;
         private Point parent;
 
-
-        public Point() {
-            row = 0;
-            col = 0;
-            parent = this;
-        }
-
         public Point(int r, int c) {
             row = r;
             col = c;
+            parent = this;
         }
 
         public void setCoordinate(int tRow, int tCol) {
@@ -146,7 +140,7 @@ public class Percolation {
     }
 
     public static void main(String[] args) {
-        Percolation p = new Percolation(10);
+        Percolation p = new Percolation(0);
 
         System.out.println(p.toString());
     }
