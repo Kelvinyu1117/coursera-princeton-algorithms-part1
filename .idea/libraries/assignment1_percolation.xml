@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="assignment1_percolation">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/src/assignment1_percolation" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/src" />
+      <root url="file://$PROJECT_DIR$/src/assignment1_percolation" />
+    </SOURCES>
+    <jarDirectory url="file://$PROJECT_DIR$/src/assignment1_percolation" recursive="false" />
+    <jarDirectory url="file://$PROJECT_DIR$/src/assignment1_percolation" recursive="false" type="SOURCES" />
+  </library>
+</component>

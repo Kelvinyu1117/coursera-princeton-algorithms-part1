@@ -1,7 +1,5 @@
 package assignment1_percolation;
 
-import java.util.Objects;
-
 public class Percolation {
 
     private Point[][] grid;
@@ -86,17 +84,6 @@ public class Percolation {
             return col;
         }
 
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Point point = (Point) o;
-            return row == point.row && col == point.col;
-        }
-
-        public int hashCode() {
-            return Objects.hash(row, col, parent);
-        }
-
         @Override
         public String toString() {
             return "(" + row + ", " + col + ")";
@@ -109,12 +96,12 @@ public class Percolation {
 
         int cnt1 = 0;
         int cnt2 = 0;
-        while (!p1.getParent().equals(p1)) {
+        while (!(p1.getParent().row == p1.row && p1.getParent().col == p1.col)) {
             p1 = p1.getParent();
             cnt1++;
         }
 
-        while (!p2.getParent().equals(p2)) {
+        while (!(p2.getParent().row == p2.row && p2.getParent().col == p2.col)) {
             p2 = p2.getParent();
             cnt2++;
         }
@@ -130,15 +117,15 @@ public class Percolation {
         if (p1 == null || p2 == null)
             throw new IllegalArgumentException();
 
-        while (!p1.getParent().equals(p1)) {
+        while (!(p1.getParent().row == p1.row && p1.getParent().col == p1.col)) {
             p1 = p1.getParent();
         }
 
-        while (!p2.getParent().equals(p2)) {
+        while (!(p2.getParent().row == p2.row && p2.getParent().col == p2.col)) {
             p2 = p2.getParent();
         }
 
-        return p1.equals(p2);
+        return p1.row == p2.row && p1.col == p2.col;
     }
 
     // opens the site (row, col) if it is not open already
