@@ -119,7 +119,7 @@ public class Percolation {
             cnt2++;
         }
 
-        if (cnt1 >= cnt2) {
+        if (p1.row == 0 && p1.col == 0 || p1.row == gridSize && p1.col == 0 || cnt1 >= cnt2) {
             p2.setParent(p1);
         } else {
             p1.setParent(p2);
@@ -146,22 +146,22 @@ public class Percolation {
         if (row < 1 || row > gridSize || col < 1 || col > gridSize)
             throw new IllegalArgumentException();
 
-        tGrid[row][col] = true;
+        if (!isOpen(row, col)) {
+            tGrid[row][col] = true;
+            numOfOpenSite++;
 
-        if (row - 1 > 0 && tGrid[row - 1][col])
-            union(grid[row][col], grid[row - 1][col]);
+            if (row - 1 > 0 && tGrid[row - 1][col])
+                union(grid[row][col], grid[row - 1][col]);
 
-        if (row + 1 <= gridSize && tGrid[row + 1][col])
-            union(grid[row][col], grid[row + 1][col]);
+            if (row + 1 <= gridSize && tGrid[row + 1][col])
+                union(grid[row][col], grid[row + 1][col]);
 
-        if (col - 1 > 0 && tGrid[row][col - 1])
-            union(grid[row][col], grid[row][col - 1]);
+            if (col - 1 > 0 && tGrid[row][col - 1])
+                union(grid[row][col], grid[row][col - 1]);
 
-        if (col + 1 <= gridSize && tGrid[row][col + 1])
-            union(grid[row][col], grid[row][col + 1]);
-
-
-        numOfOpenSite++;
+            if (col + 1 <= gridSize && tGrid[row][col + 1])
+                union(grid[row][col], grid[row][col + 1]);
+        }
     }
 
     // is the site (row, col) open?
@@ -177,44 +177,7 @@ public class Percolation {
         if (row < 1 || row > gridSize || col < 1 || col > gridSize)
             throw new IllegalArgumentException();
 
-        boolean up = false;
-        boolean down = false;
-        boolean left = false;
-        boolean right = false;
-
-        if (row - 1 > 0 && tGrid[row - 1][col])
-            up = true;
-
-        if (row + 1 <= gridSize && tGrid[row + 1][col])
-            down = true;
-
-        if (col - 1 > 0 && tGrid[row][col - 1])
-            left = true;
-
-        if (col + 1 <= gridSize && tGrid[row][col + 1])
-            right = true;
-
-        if (row - 1 < 1) {
-            if (col == 1)
-                return right && down;
-            else if (col == gridSize)
-                return left && down;
-            else
-                return left && right && down;
-        } else if (row + 1 > gridSize) {
-            if (col == 1)
-                return right && up;
-            else if (col == gridSize)
-                return left && up;
-            else
-                return left && right && up;
-        } else if (col - 1 < 1) {
-            return up && down && right;
-        } else if (col + 1 > gridSize) {
-            return up && down && left;
-        } else {
-            return up && down && left && right;
-        }
+        return isConnected(grid[row][col], grid[0][0]) && tGrid[row][col];
     }
 
     // returns the number of open sites
@@ -251,16 +214,6 @@ public class Percolation {
     }
 
     public static void main(String[] args) {
-        Percolation p = new Percolation(2);
-        p.showBlockGraph();
 
-        p.open(1, 1);
-        p.open(2, 2);
-        p.open(1, 2);
-
-        System.out.println();
-        p.showBlockGraph();
-
-        System.out.println("Percolation: " + (p.percolates() ? "Yes" : "No"));
     }
 }
