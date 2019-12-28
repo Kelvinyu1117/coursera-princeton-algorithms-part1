@@ -2,9 +2,10 @@ package assignment1_percolation;
 
 public class Percolation {
 
-    private Point[][] grid;
-    private boolean[][] tGrid;
-    private int gridSize;
+    private final Point[][] grid;
+    private final boolean[][] tGrid;
+    private final int gridSize;
+    private int[][] sz;
     private int numOfOpenSite;
 
     // creates n-by-n grid, with all sites initially blocked
@@ -17,6 +18,7 @@ public class Percolation {
 
         grid = new Point[n + 2][n + 2];
         tGrid = new boolean[n + 2][n + 2];
+        sz = new int[n + 2][n + 2];
 
         grid[0][0] = new Point(0, 0);
 
@@ -31,8 +33,10 @@ public class Percolation {
 
         // connect the first row and last row to the virtual sites
         for (int i = 1; i <= n; i++) {
-            union(grid[1][i], grid[0][0]);
-            union(grid[n][i], grid[n + 1][0]);
+            sz[1][i] = n;
+            sz[n][i] = n;
+            grid[1][i].setParent(grid[0][0]);
+            grid[n][i].setParent(grid[n + 1][0]);
         }
     }
 
@@ -84,6 +88,18 @@ public class Percolation {
             return col;
         }
 
+        public Point root() {
+            Point p1 = this;
+            while (!p1.equal(p1.getParent())) {
+                p1 = p1.getParent().getParent();
+            }
+            return p1;
+        }
+
+        public boolean equal(Point p1) {
+            return p1.row == row && p1.col == col;
+        }
+
         @Override
         public String toString() {
             return "(" + row + ", " + col + ")";
@@ -94,22 +110,18 @@ public class Percolation {
         if (p1 == null || p2 == null)
             throw new IllegalArgumentException();
 
-        int cnt1 = 0;
-        int cnt2 = 0;
-        while (!(p1.getParent().row == p1.row && p1.getParent().col == p1.col)) {
-            p1 = p1.getParent();
-            cnt1++;
-        }
+        Point root1 = p1.root();
+        Point root2 = p2.root();
 
-        while (!(p2.getParent().row == p2.row && p2.getParent().col == p2.col)) {
-            p2 = p2.getParent();
-            cnt2++;
-        }
+        if (root1.equal(root2)) return;
 
-        if (p1.row == 0 && p1.col == 0 || p1.row == gridSize && p1.col == 0 || cnt1 >= cnt2) {
-            p2.setParent(p1);
-        } else {
-            p1.setParent(p2);
+        if (sz[root1.row][root1.col] < sz[root2.row][root2.col]) {
+            root1.setParent(root2);
+            sz[root2.row][root2.col] += sz[root1.row][root1.col];
+        }
+        else {
+            root2.setParent(root1);
+            sz[root1.row][root1.col] += sz[root2.row][root2.col];
         }
     }
 
@@ -117,15 +129,7 @@ public class Percolation {
         if (p1 == null || p2 == null)
             throw new IllegalArgumentException();
 
-        while (!(p1.getParent().row == p1.row && p1.getParent().col == p1.col)) {
-            p1 = p1.getParent();
-        }
-
-        while (!(p2.getParent().row == p2.row && p2.getParent().col == p2.col)) {
-            p2 = p2.getParent();
-        }
-
-        return p1.row == p2.row && p1.col == p2.col;
+        return p1.root().equal(p2.root());
     }
 
     // opens the site (row, col) if it is not open already
@@ -136,6 +140,8 @@ public class Percolation {
         if (!isOpen(row, col)) {
             tGrid[row][col] = true;
             numOfOpenSite++;
+
+
 
             if (row - 1 > 0 && tGrid[row - 1][col])
                 union(grid[row][col], grid[row - 1][col]);
@@ -148,6 +154,9 @@ public class Percolation {
 
             if (col + 1 <= gridSize && tGrid[row][col + 1])
                 union(grid[row][col], grid[row][col + 1]);
+
+            System.out.println("Size of current tree: " + sz[row][col]);
+            System.out.println("root of the node: " + grid[row][col].root());
         }
     }
 
@@ -191,7 +200,7 @@ public class Percolation {
         return res.toString();
     }
 
-    public void showBlockGraph() {
+    private void showBlockGraph() {
         for (int i = 1; i <= gridSize; i++) {
             for (int j = 1; j <= gridSize; j++) {
                 System.out.print((tGrid[i][j] ? "o" : "x") + " ");
