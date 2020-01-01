@@ -160,9 +160,7 @@ public class Deque<Item> implements Iterable<Item> {
 
     // return an iterator over items in order from front to back
     public Iterator<Item> iterator() {
-        DequeIterator it = new DequeIterator();
-
-        return it;
+        return new DequeIterator();
     }
 
     private void print() {
