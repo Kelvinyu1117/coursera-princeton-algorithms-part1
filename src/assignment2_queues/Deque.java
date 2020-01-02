@@ -94,8 +94,8 @@ public class Deque<Item> implements Iterable<Item> {
             tail = p;
         }
         else {
+            head.setPrev(p);
             p.setNext(head);
-            p.setPrev(null);
             head = p;
         }
 
@@ -134,7 +134,9 @@ public class Deque<Item> implements Iterable<Item> {
         Item r = t.getData();
 
         head = head.getNext();
-        head.setPrev(null);
+
+        if (head != null)
+            head.setPrev(null);
 
         t = null;
         size--;
@@ -150,11 +152,12 @@ public class Deque<Item> implements Iterable<Item> {
         Item r = t.getData();
 
         tail = tail.getPrev();
-        tail.setNext(null);
+
+        if (tail != null)
+            tail.setNext(null);
 
         t = null;
         size--;
-
         return r;
     }
 
@@ -173,22 +176,20 @@ public class Deque<Item> implements Iterable<Item> {
 
     // unit testing (required)
     public static void main(String[] args) {
-        Deque<Integer> q = new Deque<>();
+        Deque<Integer> deque = new Deque<Integer>();
+        deque.addLast(1);
+        deque.print();
+        deque.addFirst(2);
+        deque.print();
+        deque.addFirst(3);
+        deque.print();
+        deque.addLast(4);
+        deque.print();
+        deque.addLast(5);
+        deque.print();
+        deque.removeFirst();
+        deque.print();
 
-        q.addFirst(4);
-        q.addFirst(5);
-        q.addFirst(6);
-
-        q.addLast(1);
-        q.addLast(2);
-        q.addLast(3);
-
-        q.print();
-
-        q.removeFirst();
-        q.removeLast();
-
-        q.print();
     }
 
 }
