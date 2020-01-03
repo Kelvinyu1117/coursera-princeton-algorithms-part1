@@ -9,15 +9,14 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private int size;
     private int capacity;
     private int head;
-    private int tmpHead;
     private int tail;
     private Item[] data;
 
     // construct an empty randomized queue
     public RandomizedQueue() {
         size = 0;
-        head = 0;
-        tail = 0;
+        head = -1;
+        tail = -1;
         capacity = 2;
         data = (Item[]) new Object[capacity];
     }
@@ -25,9 +24,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     private class RandomizedQueueIterator implements Iterator<Item> {
 
-        private int curr;
-        private int tHead;
-        private int tTail;
+        private int tHead = head;
         private int tSize = size;
         private Item[] tData;
 
@@ -39,11 +36,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
             for (int i = 0, j = head; i < size; i++) {
                 tData[i] = data[j];
-                j++;
+                j = (j + 1) % size;
             }
 
             tHead = 0;
-            tTail = size;
 
             int i = head;
 
@@ -58,7 +54,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         }
 
         public boolean hasNext() {
-            return tHead != tTail;
+            return tSize != 0;
         }
 
         public Item next() {
@@ -67,7 +63,8 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
             Item r = tData[tHead];
 
-            tHead = (tHead + 1) % capacity;
+            tHead++;
+            tSize--;
 
             return r;
         }
@@ -95,14 +92,21 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (size == capacity)
             resize(capacity * 2);
 
-        data[tail] = item;
+        if (size == 0) {
+            head = 0;
+            tail = 0;
+            data[head] = item;
+        }
+        else {
+            data[tail] = item;
 
-        if (head > tail)
-            swap(data, tail, StdRandom.uniform(tail, head));
-        else if (tail > head)
-            swap(data, tail, StdRandom.uniform(head, tail));
+            if (head > tail)
+                swap(data, tail, StdRandom.uniform(tail, head));
+            else if (tail > head)
+                swap(data, tail, StdRandom.uniform(head, tail));
 
-        tail = (tail + 1) % capacity;
+            tail = (tail + 1) % capacity;
+        }
         size++;
     }
 
@@ -121,8 +125,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
             resize(capacity / 2);
 
         Item r = data[head];
+        data[head] = null;
+
         head = (head + 1) % capacity;
-        tmpHead = head;
 
         size--;
 
@@ -134,21 +139,23 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (size == 0)
             throw new NoSuchElementException();
 
-        if (head > tail)
-            return data[StdRandom.uniform(tail, head)];
-        else if (tail > head)
-            return data[StdRandom.uniform(head, tail)];
-        else
-            return data[head];
+        Item r = null;
+
+        while (r == null)
+            r = data[StdRandom.uniform(size)];
+
+        return r;
+
     }
 
     private void resize(int cap) {
+        int oldCap = capacity;
         capacity = cap;
         Item[] t = (Item[]) new Object[capacity];
 
         for (int i = 0, j = head; i < size; i++) {
             t[i] = data[j];
-            j++;
+            j = (j + 1) % oldCap;
         }
 
         head = 0;
@@ -173,6 +180,15 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // unit testing (required)
     public static void main(String[] args) {
+        RandomizedQueue<String> q = new RandomizedQueue<String>();
+
+        q.enqueue("AHZKNUEESD");
+        q.enqueue("RNFOQAWZXO");
+        q.dequeue();
+        q.enqueue("UREGFNDRGE");
+        q.sample();
+        q.enqueue("QHRTSRPZWT");
+
     }
 
 }

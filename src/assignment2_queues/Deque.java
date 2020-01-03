@@ -62,8 +62,8 @@ public class Deque<Item> implements Iterable<Item> {
 
     // construct an empty deque
     public Deque() {
-        head = new Node<Item>();
-        tail = new Node<Item>();
+        head = null;
+        tail = null;
 
         size = 0;
     }
@@ -140,6 +140,9 @@ public class Deque<Item> implements Iterable<Item> {
 
         t = null;
         size--;
+
+        if (size == 0)
+            tail = head;
         return r;
     }
 
@@ -158,6 +161,10 @@ public class Deque<Item> implements Iterable<Item> {
 
         t = null;
         size--;
+
+        if (size == 0)
+            head = tail;
+
         return r;
     }
 
@@ -177,19 +184,10 @@ public class Deque<Item> implements Iterable<Item> {
     // unit testing (required)
     public static void main(String[] args) {
         Deque<Integer> deque = new Deque<Integer>();
-        deque.addLast(1);
+        deque.addFirst(1);
         deque.print();
-        deque.addFirst(2);
+        deque.removeLast();
         deque.print();
-        deque.addFirst(3);
-        deque.print();
-        deque.addLast(4);
-        deque.print();
-        deque.addLast(5);
-        deque.print();
-        deque.removeFirst();
-        deque.print();
-
     }
 
 }
