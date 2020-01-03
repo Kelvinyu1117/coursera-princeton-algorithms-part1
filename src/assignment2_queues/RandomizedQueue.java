@@ -36,7 +36,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
             for (int i = 0, j = head; i < size; i++) {
                 tData[i] = data[j];
-                j = (j + 1) % size;
+                j++;
             }
 
             tHead = 0;
@@ -94,7 +94,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         if (size == 0) {
             head = 0;
-            tail = 0;
+            tail = 1;
             data[head] = item;
         }
         else {
@@ -131,6 +131,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         size--;
 
+        if (size == 0) {
+            head = -1;
+            tail = -1;
+        }
         return r;
     }
 
@@ -139,13 +143,12 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         if (size == 0)
             throw new NoSuchElementException();
 
-        Item r = null;
+        if (head > tail)
+            swap(data, tail, StdRandom.uniform(tail, head));
+        else if (tail > head)
+            swap(data, tail, StdRandom.uniform(head, tail));
 
-        while (r == null)
-            r = data[StdRandom.uniform(size)];
-
-        return r;
-
+        return data[tail];
     }
 
     private void resize(int cap) {
@@ -171,8 +174,12 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     }
 
     private void print() {
+        int c = 0;
         for (Item item : this) {
             System.out.print(item + " ");
+            c++;
+            if (c % 10 == 0)
+                System.out.println();
         }
 
         System.out.println();
@@ -180,15 +187,15 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     // unit testing (required)
     public static void main(String[] args) {
-        RandomizedQueue<String> q = new RandomizedQueue<String>();
+        RandomizedQueue<Integer> q = new RandomizedQueue<Integer>();
 
-        q.enqueue("AHZKNUEESD");
-        q.enqueue("RNFOQAWZXO");
-        q.dequeue();
-        q.enqueue("UREGFNDRGE");
-        q.sample();
-        q.enqueue("QHRTSRPZWT");
+        for (int i = 0; i < 64; i++)
+            q.enqueue(StdRandom.uniform(100));
 
+        q.print();
+
+        for (int i = 0; i < 64; i++)
+            q.dequeue();
     }
 
 }
