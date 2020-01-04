@@ -30,14 +30,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
         public RandomizedQueueIterator() {
             tData = (Item[]) new Object[capacity];
-            for (int i = 0; i < capacity; i++) {
-                tData[i] = data[i];
-            }
-
-            for (int i = head; i < tail; i++) {
-                swap(tData, i, StdRandom.uniform(i, i + 1));
-            }
-
+            System.arraycopy(data, 0, tData, 0, capacity);
         }
 
         public boolean hasNext() {
