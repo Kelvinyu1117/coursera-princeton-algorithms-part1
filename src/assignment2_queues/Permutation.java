@@ -1,8 +1,4 @@
-package assignment2_queues;/* *****************************************************************************
- *  Name:
- *  Date:
- *  Description:
- **************************************************************************** */
+package assignment2_queues;
 
 import edu.princeton.cs.algs4.StdIn;
 import edu.princeton.cs.algs4.StdOut;
