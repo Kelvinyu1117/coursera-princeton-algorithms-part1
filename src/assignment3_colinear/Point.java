@@ -1,5 +1,4 @@
 package assignment3_colinear;
-
 import edu.princeton.cs.algs4.StdDraw;
 
 import java.util.Comparator;
@@ -53,13 +52,20 @@ public class Point implements Comparable<Point> {
      */
     public double slopeTo(Point that) {
         /* YOUR CODE HERE */
+        if (that == null)
+            throw new NullPointerException();
+
+        if (this.x == that.x && this.y == that.y)
+            return Double.NEGATIVE_INFINITY;
+
         Double dy = (that.y * 1.0 - this.y);
         Double dx = (that.x * 1.0 - this.x);
 
-        if (dy.compareTo(0.0) == 0)
-            return 0;
         if (dx.compareTo(0.0) == 0)
             return Double.POSITIVE_INFINITY;
+
+        if (dy.compareTo(0.0) == 0)
+            return 0;
 
         return dy / dx;
     }
@@ -78,9 +84,18 @@ public class Point implements Comparable<Point> {
      */
     public int compareTo(Point that) {
         /* YOUR CODE HERE */
-        if (this.y == that.y)
-            return this.x - that.x;
-        return this.y - that.y;
+        if (that == null)
+            throw new NullPointerException();
+
+        if (this.y < that.y) {
+            return -1;
+        }
+        else if (this.y > that.y) {
+            return 1;
+        }
+        else {
+            return Integer.compare(this.x, that.x);
+        }
     }
 
     /**
@@ -92,7 +107,9 @@ public class Point implements Comparable<Point> {
     public Comparator<Point> slopeOrder() {
         /* YOUR CODE HERE */
         return (p1, p2) -> {
-            return Double.compare(p1.slopeTo(p2), p2.slopeTo(p1));
+            if (p1 == null || p2 == null)
+                throw new NullPointerException();
+            return Double.compare(this.slopeTo(p1), this.slopeTo(p2));
         };
     }
 
@@ -114,5 +131,10 @@ public class Point implements Comparable<Point> {
      */
     public static void main(String[] args) {
         /* YOUR CODE HERE */
+        Point a = new Point(4, 9);
+        Point b = new Point(4, 9);
+        Point c = new Point(9, 1);
+
+        System.out.println(a.slopeTo(b));
     }
 }

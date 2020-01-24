@@ -1,12 +1,11 @@
 package assignment3_colinear;
 
-import assignment3_colinear.LineSegment;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
 public class FastCollinearPoints {
-    private LineSegment[] colinearPoints;
+    private final LineSegment[] colinearPoints;
     private int nSegments;
 
 
@@ -25,8 +24,11 @@ public class FastCollinearPoints {
         public int compareTo(Slope b) {
             if (v.compareTo(b.v) == 0)
                 return q.compareTo(b.q);
-            else
-                return v.compareTo(b.v);
+            return v.compareTo(b.v);
+        }
+
+        public int sameSlope(Slope b) {
+            return v.compareTo(b.v);
         }
     }
 
@@ -72,25 +74,50 @@ public class FastCollinearPoints {
 
         nSegments = 0;
 
+        Node head = null;
         for (int i = 0; i < tmp.length; i++) {
-            Slope[] arr = new Slope[tmp.length - (i + 1)];
-            Slope[] aux = new Slope[tmp.length - (i + 1)];
+            Slope[] arr = new Slope[tmp.length - 1];
+            Slope[] aux = new Slope[tmp.length - 1];
 
-            for (int k = 0, j = i + 1; j < tmp.length; j++) {
-                arr[k++] = new Slope(tmp[i], tmp[j]);
+            for (int k = 0, j = 0; j < tmp.length; j++) {
+                if (j != i)
+                    arr[k++] = new Slope(tmp[i], tmp[j]);
             }
 
             // sort by slope
             mergeSort(arr, aux, 0, arr.length - 1);
 
+            int s = 0;
             int e = 0;
-            for (int j = 0; j < arr.length - 1; j++) {
-                if (arr[j].compareTo(arr[j + 1]) == 0)
-                    e = j;
+            int f = 0;
+            int cnt = 0;
+            while (f < arr.length) {
+                int g = f + 1;
+
+                while (g < arr.length && arr[f].sameSlope(arr[g]) == 0)
+                    g++;
+
+                if (g - f >= 3) {
+                    s = f;
+                    e = g;
+                    if (arr[s].q.compareTo(arr[s].p) < 0)
+                        head = insert(head, arr[s].q, arr[e - 1].q);
+                    else
+                        head = insert(head, arr[s].p, arr[e - 1].q);
+                }
+
+                f = g;
             }
 
 
-            int abc = 0;
+        }
+
+        colinearPoints = new LineSegment[nSegments];
+
+        int i = 0;
+        while (head != null) {
+            colinearPoints[i++] = new LineSegment(head.i, head.f);
+            head = head.next;
         }
     }
 
@@ -100,7 +127,7 @@ public class FastCollinearPoints {
 
         int i = lo;
         int j = mid + 1;
-        System.out.println("--------------------");
+
         for (int k = lo; k <= hi; k++) {
             if (i > mid) a[k] = aux[j++];
             else if (j > hi) a[k] = aux[i++];
@@ -125,9 +152,19 @@ public class FastCollinearPoints {
         else {
             Node it1 = head;
 
-            while (it1.next != null)
-                it1 = it1.next;
+            while (it1.next != null) {
+                if (it1.f.compareTo(f) == 0 || it1.f.compareTo(i) == 0)
+                    return head;
+                else if (it1.i.compareTo(f) == 0 || it1.i.compareTo(i) == 0)
+                    return head;
 
+                it1 = it1.next;
+            }
+
+            if (it1.f.compareTo(f) == 0 || it1.f.compareTo(i) == 0)
+                return head;
+            else if (it1.i.compareTo(f) == 0 || it1.i.compareTo(i) == 0)
+                return head;
 
             it1.next = new Node(i, f);
             nSegments++;
@@ -142,7 +179,7 @@ public class FastCollinearPoints {
     }     // the number of line segments
 
     public LineSegment[] segments() {
-        return colinearPoints;
+        return colinearPoints.clone();
     }
 
     public static void main(String[] args) {

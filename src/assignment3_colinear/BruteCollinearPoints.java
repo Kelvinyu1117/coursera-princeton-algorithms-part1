@@ -1,10 +1,15 @@
-package assignment3_colinear;
+package assignment3_colinear;/* *****************************************************************************
+ *  Name:
+ *  Date:
+ *  Description:
+ **************************************************************************** */
+
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdDraw;
 import edu.princeton.cs.algs4.StdOut;
 
 public class BruteCollinearPoints {
-    private LineSegment[] colinearPoints;
+    private final LineSegment[] colinearPoints;
     private int nSegments;
 
     private class Node {
@@ -99,7 +104,7 @@ public class BruteCollinearPoints {
     }     // the number of line segments
 
     public LineSegment[] segments() {
-        return colinearPoints;
+        return colinearPoints.clone();
     }
 
     public static void main(String[] args) {
@@ -129,6 +134,5 @@ public class BruteCollinearPoints {
             segment.draw();
         }
         StdDraw.show();
-
     }
 }
